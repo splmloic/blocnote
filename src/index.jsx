@@ -3,36 +3,56 @@ import ReactDOM from 'react-dom';
 import MarkdownInput from './Components/MarkdownInput';
 import NoteDisplay from './Components/NoteDisplay';
 import Sidebar from './Components/Sidebar';
-import { Layout } from 'antd';
+import { Layout, Row, Col } from 'antd';
+import './assets/index.css';
 
 const { Content } = Layout;
 
 const App = () => {
   const [currentNote, setCurrentNote] = useState(null);
 
+  const getLastNoteFromLocalStorage = () => {
+    const keys = Object.keys(localStorage);
+    const lastKey = keys[keys.length - 1];
+    return JSON.parse(localStorage.getItem(lastKey));
+  };
+
   useEffect(() => {
-    // Récupérer la première note du localStorage
-    const keys = Object.keys(localStorage).filter(key => key.startsWith("blocNote-"));
-    if (keys.length > 0) {
-      const firstNoteKey = keys[0];
-      const firstNote = JSON.parse(localStorage.getItem(firstNoteKey));
-      setCurrentNote(firstNote);
+    const lastNote = getLastNoteFromLocalStorage();
+    if (lastNote) {
+      setCurrentNote(lastNote);
     }
-  }, []); // Effectuer cette action une seule fois lors du chargement initial
+  }, []);
 
   const handleNoteClick = (note) => {
     setCurrentNote(note);
+    console.log(note);
+    console.log(currentNote)
+  };
+
+  const handleNoteUpdate = (updatedNote) => {
+    setCurrentNote(updatedNote);
   };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sidebar />
-      <Layout className="site-layout">
-        <Content style={{ margin: '16px' }}>
-          <NoteDisplay note={currentNote} />
-          <MarkdownInput currentNote={currentNote} />
-        </Content>
-      </Layout>
+      <Row>
+        <Col span={6}>
+          <Sidebar onNoteSelect={handleNoteClick} />
+        </Col>
+        <Col span={18}>
+          <Layout style={{ padding: '0 24px 24px' }}>
+            <Content className="site-layout-background">
+              <Row gutter={16}>
+                <Col span={16}>
+                  <NoteDisplay note={currentNote} />
+                  <MarkdownInput currentNote={currentNote} onUpdate={handleNoteUpdate} />
+                </Col>
+              </Row>
+            </Content>
+          </Layout>
+        </Col>
+      </Row>
     </Layout>
   );
 };
