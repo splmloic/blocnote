@@ -26,8 +26,6 @@ const App = () => {
 
   const handleNoteClick = (note) => {
     setCurrentNote(note);
-    console.log(note);
-    console.log(currentNote)
   };
 
   const handleNoteUpdate = (updatedNote) => {

@@ -37,7 +37,7 @@ function MarkdownInput({ currentNote, onUpdate }) {
         value={values.text}
         onChange={handleInputChange('text')}
         placeholder="Texte"
-        rows={4}
+        rows={8}
         style={{ marginBottom: '8px' }}
       />
       <br />
